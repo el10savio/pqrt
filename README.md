@@ -63,7 +63,7 @@ The topic has 4 partitions and the consumer group runs 4 members, so each consum
 
 ## Queries
 
-Queries run via a short-lived container — no local DuckDB or MinIO client needed:
+Queries run via a short-lived container using DuckDB:
 
 ```bash
 make query ARGS="<subcommand> [flags]"
