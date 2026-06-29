@@ -1,0 +1,31 @@
+# Git
+.git/
+.gitignore
+
+# Build output
+bin/
+
+# Infrastructure config (not needed inside image)
+config/
+grafana/
+
+# Docker / compose
+docker-compose.yml
+Dockerfile
+
+# Docs and scripts
+*.md
+setup.sh
+Makefile
+
+# Test artifacts
+coverage.out
+*.test
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+.claude/
+*.swp
+*.swo

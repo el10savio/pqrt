@@ -1,0 +1,187 @@
+{
+  "title": "Streaming Log Analytics Pipeline",
+  "uid": "pqrt-pipeline",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "5s",
+  "time": { "from": "now-15m", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "type": "row",
+      "title": "Producer",
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 },
+      "collapsed": false
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Events Published / sec",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 0, "y": 1, "w": 8, "h": 8 },
+      "targets": [{
+        "expr": "sum(rate(producer_events_published_total[1m]))",
+        "legendFormat": "published/sec"
+      }]
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Kafka Publish Latency p99 (ms)",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 8, "y": 1, "w": 8, "h": 8 },
+      "fieldConfig": {
+        "defaults": { "unit": "ms" }
+      },
+      "targets": [{
+        "expr": "histogram_quantile(0.99, sum by(le) (rate(producer_kafka_publish_latency_seconds_bucket[1m]))) * 1000",
+        "legendFormat": "p99"
+      }]
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "Publish Error Rate",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 16, "y": 1, "w": 8, "h": 8 },
+      "targets": [{
+        "expr": "sum(rate(producer_publish_errors_total[1m]))",
+        "legendFormat": "errors/sec"
+      }]
+    },
+    {
+      "id": 10,
+      "type": "row",
+      "title": "Consumer",
+      "gridPos": { "x": 0, "y": 9, "w": 24, "h": 1 },
+      "collapsed": false
+    },
+    {
+      "id": 11,
+      "type": "timeseries",
+      "title": "Events Consumed / sec",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 0, "y": 10, "w": 8, "h": 8 },
+      "targets": [{
+        "expr": "sum by(instance) (rate(consumer_events_consumed_total[1m]))",
+        "legendFormat": "{{instance}}"
+      }]
+    },
+    {
+      "id": 12,
+      "type": "timeseries",
+      "title": "Batch Flush Size p50 / p99",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 8, "y": 10, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum by(le, instance) (rate(consumer_batch_flush_size_bucket[1m])))",
+          "legendFormat": "{{instance}} p50"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum by(le, instance) (rate(consumer_batch_flush_size_bucket[1m])))",
+          "legendFormat": "{{instance}} p99"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "type": "timeseries",
+      "title": "Parquet Write Latency p99 (ms)",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 16, "y": 10, "w": 8, "h": 8 },
+      "fieldConfig": {
+        "defaults": { "unit": "ms" }
+      },
+      "targets": [{
+        "expr": "histogram_quantile(0.99, sum by(le, instance) (rate(consumer_parquet_write_latency_seconds_bucket[1m]))) * 1000",
+        "legendFormat": "{{instance}}"
+      }]
+    },
+    {
+      "id": 14,
+      "type": "timeseries",
+      "title": "MinIO Upload Latency p99 (ms)",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 0, "y": 18, "w": 8, "h": 8 },
+      "fieldConfig": {
+        "defaults": { "unit": "ms" }
+      },
+      "targets": [{
+        "expr": "histogram_quantile(0.99, sum by(le, instance) (rate(consumer_minio_upload_latency_seconds_bucket[1m]))) * 1000",
+        "legendFormat": "{{instance}}"
+      }]
+    },
+    {
+      "id": 15,
+      "type": "timeseries",
+      "title": "Upload Error Rate",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 8, "y": 18, "w": 8, "h": 8 },
+      "targets": [{
+        "expr": "sum by(instance) (rate(consumer_upload_errors_total[1m]))",
+        "legendFormat": "{{instance}}"
+      }]
+    },
+    {
+      "id": 16,
+      "type": "timeseries",
+      "title": "Kafka Consumer Lag",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 16, "y": 18, "w": 8, "h": 8 },
+      "targets": [{
+        "expr": "sum by(instance) (consumer_kafka_lag)",
+        "legendFormat": "{{instance}}"
+      }]
+    },
+    {
+      "id": 20,
+      "type": "row",
+      "title": "Application",
+      "gridPos": { "x": 0, "y": 26, "w": 24, "h": 1 },
+      "collapsed": false
+    },
+    {
+      "id": 21,
+      "type": "timeseries",
+      "title": "CPU Usage (cores)",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 0, "y": 27, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum by(instance) (rate(process_cpu_seconds_total[1m]))",
+          "legendFormat": "{{instance}}"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "type": "timeseries",
+      "title": "Memory RSS",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 8, "y": 27, "w": 8, "h": 8 },
+      "fieldConfig": {
+        "defaults": { "unit": "bytes" }
+      },
+      "targets": [
+        {
+          "expr": "sum by(instance) (process_resident_memory_bytes)",
+          "legendFormat": "{{instance}}"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "type": "timeseries",
+      "title": "Goroutines",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 16, "y": 27, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum by(instance) (go_goroutines)",
+          "legendFormat": "{{instance}}"
+        }
+      ]
+    }
+  ]
+}
