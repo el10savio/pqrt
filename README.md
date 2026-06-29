@@ -25,15 +25,11 @@ A high-throughput streaming log analytics pipeline. Fake HTTP access log events 
                               └── DuckDB (embedded in binary)
 ```
 
-
-
 Events are partitioned on MinIO using Hive-style paths:
 
 ```
 logs/data/year=YYYY/month=MM/day=DD/hour=HH/part-NNNN.parquet
 ```
-
-
 
 DuckDB is runs via docker `docker compose run --rm consumer query` starts the image with the `query` subcommand; DuckDB then connects to MinIO over S3/httpfs and queries the Parquet files directly.
 
@@ -42,6 +38,8 @@ DuckDB is runs via docker `docker compose run --rm consumer query` starts the im
 - Docker Compose
 - Go 1.25+ 
 - CGO required for DuckDB
+
+
 
 ## Getting Started
 
@@ -52,8 +50,6 @@ DuckDB is runs via docker `docker compose run --rm consumer query` starts the im
 `setup.sh` builds the image, starts all services in dependency order, waits for healthchecks, creates the Kafka topic (4 partitions) and MinIO bucket, then starts one producer and four consumers.
 
 The topic has 4 partitions and the consumer group runs 4 members, so each consumer owns exactly one partition.
-
-
 
 ## Services
 
@@ -76,16 +72,14 @@ make query ARGS="<subcommand> [flags]"
 ```
 
 
-
-
-| Subcommand          | Flags                                            | Default window | Description                        |
-| ------------------- | ------------------------------------------------ | -------------- | ---------------------------------- |
-| `status-codes`      |                                                  | —              | Request count per HTTP status code |
-| `top-paths`         | `--limit N` `--window Xh/Xm`                     | `1h`           | Top URIs by request count          |
-| `top-clients`       | `--limit N` `--window Xh/Xm`                     | `1h`           | Top client IDs by request count    |
-| `error-rate`        | `--granularity day|hour|minute` `--window Xh/Xm` | `24h`          | Error rate % over time             |
-| `request-volume`    | `--granularity day|hour|minute` `--window Xh/Xm` | `24h`          | Request count over time            |
-| `bytes-transferred` | `--granularity day|hour|minute` `--window Xh/Xm` | `24h`          | MB transferred over time           |
+| Subcommand          | Flags                        | Default window | Description                        |
+| ------------------- | ---------------------------- | -------------- | ---------------------------------- |
+| `status-codes`      |                              | —              | Request count per HTTP status code |
+| `top-paths`         | `--limit N` `--window Xh/Xm` | `1h`           | Top URIs by request count          |
+| `top-clients`       | `--limit N` `--window Xh/Xm` | `1h`           | Top client IDs by request count    |
+| `error-rate`        | `--granularity day           | hour           | minute ``--window Xh/Xm`           |
+| `request-volume`    | `--granularity day           | hour           | minute ``--window Xh/Xm`           |
+| `bytes-transferred` | `--granularity day           | hour           | minute ``--window Xh/Xm`           |
 
 
 
@@ -138,7 +132,7 @@ make query ARGS="bytes-transferred --granularity hour --window 24h"
 | ----------- | ------------------------------------------------------------------------------------------------------------- |
 | Producer    | Publish rate, Kafka publish latency p99, publish errors                                                       |
 | Consumer    | Consume rate, batch flush size, Parquet write latency p99, MinIO upload latency p99, upload errors, Kafka lag |
-| Application | CPU, memory RSS, goroutines — per container                                                                   |
+| Application | CPU, memory RSS, goroutines per container                                                                     |
 
 
 
