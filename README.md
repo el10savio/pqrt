@@ -1,7 +1,5 @@
 # Streaming Log Analytics Pipeline
 
-Dashboard
-
 A high-throughput streaming log analytics pipeline. Fake HTTP access log events flow from Go producers through into Kafka are converted into Parquet files sent to on MinIO with consumers. Queries are in real time via DuckDB
 
 ## Architecture
