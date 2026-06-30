@@ -75,9 +75,9 @@ make query ARGS="<subcommand> [flags]"
 | `status-codes`      |                              | —              | Request count per HTTP status code |
 | `top-paths`         | `--limit N` `--window Xh/Xm` | `1h`           | Top URIs by request count          |
 | `top-clients`       | `--limit N` `--window Xh/Xm` | `1h`           | Top client IDs by request count    |
-| `error-rate`        | `--granularity day           | hour           | minute ``--window Xh/Xm`           |
-| `request-volume`    | `--granularity day           | hour           | minute ``--window Xh/Xm`           |
-| `bytes-transferred` | `--granularity day           | hour           | minute ``--window Xh/Xm`           |
+| `error-rate`        | `--granularity day`          | hour           | minute `--window Xh/Xm`            |
+| `request-volume`    | `--granularity day`          | hour           | minute `--window Xh/Xm`            |
+| `bytes-transferred` | `--granularity day`          | hour           | minute `--window Xh/Xm`            |
 
 
 
