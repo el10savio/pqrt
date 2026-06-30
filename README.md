@@ -6,7 +6,7 @@ A high-throughput streaming log analytics pipeline. Fake HTTP access log events 
 
 ```
 ┌─────────────────┐  http.logs  ┌──────────────────┐
-│    Producers    │────────────▶│   Kafka (KRaft)  │
+│    Producer     │────────────▶│      Kafka       │
 └─────────────────┘             └────────┬─────────┘
                                          │
                                          ▼
